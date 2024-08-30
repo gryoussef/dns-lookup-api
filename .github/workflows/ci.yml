@@ -22,7 +22,7 @@ jobs:
         pip install pytest flake8
     - name: Run tests
       env:
-        PYTHONPATH: ${{ github.workspace }}/src
+        PYTHONPATH: ${{ github.workspace }}
       run: |
         pytest
     - name: Run linting
