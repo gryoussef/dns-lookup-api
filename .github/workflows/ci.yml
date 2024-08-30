@@ -22,5 +22,7 @@ jobs:
         pip install pytest flake8
     - name: Run tests
       run: pytest
+      env:
+        PYTHONPATH: ./src
     - name: Run linting
       run: flake8 ./src
