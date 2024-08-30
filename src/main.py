@@ -25,13 +25,13 @@ app.add_middleware(
 
 # Create Prometheus metrics
 REQUEST_COUNT = Counter(
-    'http_requests_total', 
-    'Total number of HTTP requests', 
+    'http_requests_total',
+    'Total number of HTTP requests',
     ['method', 'endpoint', 'http_status']
 )
 REQUEST_LATENCY = Histogram(
-    'http_request_duration_seconds', 
-    'HTTP request latency in seconds', 
+    'http_request_duration_seconds',
+    'HTTP request latency in seconds',
     ['method', 'endpoint']
 )
 
@@ -79,8 +79,8 @@ app.router.lifespan_context = lifespan
 if __name__ == "__main__":
 
     uvicorn.run(
-        app, 
-        host="0.0.0.0", 
+        app,
+        host="0.0.0.0",
         port=3000,
         log_level="info",
         access_log=True

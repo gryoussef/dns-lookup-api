@@ -50,7 +50,10 @@ async def lookup(
 
 
 @router.post("/v1/tools/validate")
-async def validate(request: ValidateRequest, utils: IUtils = Depends(get_utils)):
+async def validate(
+    request: ValidateRequest,
+    utils: IUtils = Depends(get_utils)
+):
     return {"is_valid": utils.is_valid_ip(request.ip)}
 
 

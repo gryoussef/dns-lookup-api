@@ -80,7 +80,7 @@ class Database(IDatabase):
     async def get_latest_queries(self, limit):
         async with self.pool.acquire() as conn:
             rows = await conn.fetch(
-                "SELECT domain, ip_addresses, created_at FROM queries ORDER BY created_at DESC LIMIT $1",
-                limit
+                "SELECT domain, ip_addresses, created_at FROM queries "
+                "ORDER BY created_at DESC LIMIT $1", limit
             )
             return [dict(row) for row in rows]
