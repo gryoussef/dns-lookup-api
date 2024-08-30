@@ -1,6 +1,0 @@
-apiVersion: v2
-name: dns-lookup-app
-description: A Helm chart for DNS Lookup API
-type: API
-version: 0.1.0
-appVersion: "0.1.0"
