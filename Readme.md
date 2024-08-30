@@ -34,21 +34,26 @@ To run the application using Docker Compose, execute the following command in th
 docker-compose up -d --build
 ```
 
+## API Documentation
+
+After launching the application, you can explore the available endpoints by navigating to the `/docs` path in your web browser. This will open the automatically generated Swagger UI, which provides a user-friendly interface for interacting with the API. You can view detailed information about each endpoint, including the request parameters, response format, and example requests and responses.
+
 ## Helm chart
 
-The Helm chart for the DNS Lookup API application is located in the chart/ directory. It includes:
+The Helm chart for the DNS Lookup API application is located in the `chart/` directory. It includes the following components:
 
-- Chart.yaml: Defines chart metadata.
-- values.yaml: Contains default configuration values (e.g., Docker image, database credentials).
-templates/ directory:
-- app-deployment.yaml: Deploys the application.
-- app-service.yaml: Exposes the application via a NodePort service.
-- configmap.yaml: Stores database configuration.
-- secret.yaml: Stores sensitive database credentials.
-- db-statefulset.yaml: Deploys PostgreSQL as a StatefulSet.
-- db-service.yaml: Exposes the database.
-- persistent-volume.yaml: Defines the PersistentVolume.
-- persistent-volume-claim.yaml: Defines the PersistentVolumeClaim.
+- `Chart.yaml`: Defines chart metadata.
+- `values.yaml`: Contains default configuration values (e.g., Docker image, database credentials).
+
+The `templates/` directory contains Kubernetes resource templates:
+- `app-deployment.yaml`: Deploys the application.
+- `app-service.yaml`: Exposes the application via a NodePort service.
+- `configmap.yaml`: Stores database configuration.
+- `secret.yaml`: Stores sensitive database credentials.
+- `db-statefulset.yaml`: Deploys PostgreSQL as a StatefulSet.
+- `db-service.yaml`: Exposes the database via Headless service.
+- `persistent-volume.yaml`: Defines the PersistentVolume.
+- `persistent-volume-claim.yaml`: Defines the PersistentVolumeClaim.
 
 These components collectively deploy and manage the DNS Lookup API and its PostgreSQL database on Kubernetes.
 
