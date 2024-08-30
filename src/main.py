@@ -58,7 +58,10 @@ app.mount("/metrics", metrics_app)
 
 
 # Include API router
-app.include_router(router, dependencies=[Depends(get_database), Depends(get_utils)])
+app.include_router(
+    router,
+    dependencies=[Depends(get_database), Depends(get_utils)]
+)
 
 
 # Health check endpoint

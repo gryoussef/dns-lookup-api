@@ -64,7 +64,7 @@ class Database(IDatabase):
                     id SERIAL PRIMARY KEY,
                     domain TEXT NOT NULL,
                     ip_addresses TEXT[] NOT NULL,
-                    created_at TIMESTAMP WITH TIME ZONE DEFAULT 
+                    created_at TIMESTAMP WITH TIME ZONE DEFAULT
                     CURRENT_TIMESTAMP
                 )
             ''')
