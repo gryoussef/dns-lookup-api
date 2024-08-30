@@ -3,7 +3,6 @@ import logging
 import socket
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from typing import List
 from src.database import IDatabase
 from src.utils import IUtils
 from src.dependencies import get_database, get_utils
@@ -37,9 +36,11 @@ async def root(utils: IUtils = Depends(get_utils)):
 
 
 @router.post("/v1/tools/lookup")
-async def lookup(request: LookupRequest,
-                  db: IDatabase = Depends(get_database),
-                    utils: IUtils = Depends(get_utils)):
+async def lookup(
+    request: LookupRequest,
+    db: IDatabase = Depends(get_database),
+    utils: IUtils = Depends(get_utils)
+):
     try:
         ip_addresses = utils.get_ip_addresses(request.domain)
         await db.save_query(request.domain, ip_addresses)

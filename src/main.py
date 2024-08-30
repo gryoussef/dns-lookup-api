@@ -24,9 +24,16 @@ app.add_middleware(
 
 
 # Create Prometheus metrics
-REQUEST_COUNT = Counter('http_requests_total', 'Total number of HTTP requests', ['method', 'endpoint', 'http_status'])
-REQUEST_LATENCY = Histogram('http_request_duration_seconds', 'HTTP request latency in seconds', ['method', 'endpoint'])
-
+REQUEST_COUNT = Counter(
+    'http_requests_total', 
+    'Total number of HTTP requests', 
+    ['method', 'endpoint', 'http_status']
+)
+REQUEST_LATENCY = Histogram(
+    'http_request_duration_seconds', 
+    'HTTP request latency in seconds', 
+    ['method', 'endpoint']
+)
 
 # Middleware to collect metrics
 @app.middleware("http")
@@ -34,10 +41,8 @@ async def metrics_middleware(request: Request, call_next):
     start_time = time.time()
     response = await call_next(request)
     request_latency = time.time() - start_time
-
     REQUEST_COUNT.labels(request.method, request.url.path, response.status_code).inc()
     REQUEST_LATENCY.labels(request.method, request.url.path).observe(request_latency)
-
     return response
 
 
