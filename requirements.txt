@@ -2,3 +2,4 @@ fastapi
 asyncpg
 uvicorn
 prometheus-client
+pytest-asyncio
