@@ -7,7 +7,25 @@ on:
     branches: [ master ]
 
 jobs:
+  check-commit:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
+    - id: check
+      run: |
+        if git log -1 --pretty=%B | grep -q "Update chart version"; then
+          echo "should_run=false" >> $GITHUB_OUTPUT
+        else
+          echo "should_run=true" >> $GITHUB_OUTPUT
+        fi
+
   test-and-lint:
+    needs: check-commit
+    if: needs.check-commit.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -29,6 +47,8 @@ jobs:
       run: flake8 ./src
 
   build-and-push:
+    needs: check-commit
+    if: needs.check-commit.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -47,3 +67,45 @@ jobs:
         tags: |
           gryoussef/dns-lookup-api:${{ github.sha }}
           gryoussef/dns-lookup-api:latest
+
+ update-helm-chart:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update Chart.yaml
+      run: |
+        sed -i 's/version: .*/version: ${{ github.run_number }}/g' chart/Chart.yaml
+        sed -i 's/appVersion: .*/appVersion: ${{ github.sha }}/g' chart/Chart.yaml
+    - name: Update values.yaml
+      run: |
+        sed -i 's|image: .*|image: gryoussef/dns-lookup-api:${{ github.sha }}|g' chart/values.yaml
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add chart/Chart.yaml chart/values.yaml
+        git commit -m "Update chart version to ${{ github.run_number }} and appVersion to ${{ github.sha }}"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+
+  package-helm:
+    needs: update-helm-chart
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: v3.8.1
+    - name: Package Helm chart
+      run: |
+        helm package ./chart
+    - name: Upload Helm chart
+      uses: actions/upload-artifact@v2
+      with:
+        name: helm-chart
+        path: ./*.tgz
