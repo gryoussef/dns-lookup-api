@@ -8,8 +8,10 @@ from src.dependencies import get_database, get_utils
 from src.api import router
 from src.settings import settings
 
+
 # Initialize FastAPI app
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.VERSION)
+
 
 # Add CORS middleware
 app.add_middleware(
@@ -20,9 +22,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Create Prometheus metrics
 REQUEST_COUNT = Counter('http_requests_total', 'Total number of HTTP requests', ['method', 'endpoint', 'http_status'])
 REQUEST_LATENCY = Histogram('http_request_duration_seconds', 'HTTP request latency in seconds', ['method', 'endpoint'])
+
 
 # Middleware to collect metrics
 @app.middleware("http")
@@ -36,17 +40,21 @@ async def metrics_middleware(request: Request, call_next):
 
     return response
 
+
 # Mount Prometheus metrics app
 metrics_app = make_asgi_app()
 app.mount("/metrics", metrics_app)
 
+
 # Include API router
 app.include_router(router, dependencies=[Depends(get_database), Depends(get_utils)])
+
 
 # Health check endpoint
 @app.get("/health")
 async def health_check() -> dict:
     return {"status": "ok"}
+
 
 # Lifespan event handler
 @asynccontextmanager
@@ -58,6 +66,7 @@ async def lifespan(app: FastAPI):
     yield
     # Shutdown event
     await database.disconnect()
+
 
 app.router.lifespan_context = lifespan
 

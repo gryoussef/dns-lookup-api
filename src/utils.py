@@ -4,6 +4,7 @@ from pydantic import IPvAnyAddress
 from abc import ABC, abstractmethod
 from typing import List
 
+
 class IUtils(ABC):
     @abstractmethod
     def is_running_in_kubernetes(self) -> bool:
@@ -16,6 +17,7 @@ class IUtils(ABC):
     @abstractmethod
     def is_valid_ip(self, ip: str) -> bool:
         pass
+
 
 class Utils(IUtils):
     def is_running_in_kubernetes(self) -> bool:

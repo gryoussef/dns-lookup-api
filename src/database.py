@@ -4,6 +4,7 @@ from src.settings import settings
 from abc import ABC, abstractmethod
 from typing import List
 
+
 class IDatabase(ABC):
     @abstractmethod
     async def connect(self):
@@ -25,7 +26,9 @@ class IDatabase(ABC):
     async def get_latest_queries(self, limit: int):
         pass
 
+
 logger = logging.getLogger(__name__)
+
 
 class Database(IDatabase):
     _instance = None
