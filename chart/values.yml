@@ -1,0 +1,31 @@
+replicaCount: 2
+
+image:
+  repository: your-registry/dns-lookup-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  port: 80
+  targetPort: 3000
+  nodePort: 30080
+
+database:
+  host: postgres-svc
+  port: 5432
+  name: app_db
+  user: postgres
+  password: password
+
+postgres:
+  image:
+    repository: postgres
+    tag: "13"
+  storage:
+    size: 1Gi
+
+configMap:
+  name: app-config
+
+secret:
+  name: db-credentials
