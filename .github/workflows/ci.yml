@@ -21,8 +21,9 @@ jobs:
         pip install -r requirements.txt
         pip install pytest flake8
     - name: Run tests
-      run: pytest
       env:
-        PYTHONPATH: ./src
+        PYTHONPATH: ${{ github.workspace }}/src
+      run: |
+        pytest
     - name: Run linting
       run: flake8 ./src
