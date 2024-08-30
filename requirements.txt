@@ -3,3 +3,4 @@ asyncpg
 uvicorn
 prometheus-client
 pytest-asyncio
+httpx
