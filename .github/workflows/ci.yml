@@ -63,5 +63,5 @@ jobs:
     - name: Upload Helm chart
       uses: actions/upload-artifact@v2
       with:
-        name: helm-chart
+        name: helm-chart-${{ github.sha }}
         path: ./*.tgz
