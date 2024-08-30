@@ -29,8 +29,6 @@ jobs:
       run: flake8 ./src
 
   build-and-push:
-    needs: check-commit
-    if: needs.check-commit.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
