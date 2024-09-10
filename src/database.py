@@ -59,10 +59,14 @@ class Database(IDatabase):
             except asyncpg.PostgresError as e:
                 logger.error(f"Error connecting to database: {e}")
                 if attempt < retries - 1:
-                    logger.info(f"Retrying connection attempt {attempt + 1}/{retries}")
+                    logger.info(
+                        f"Retrying connection attempt {attempt + 1}/{retries}"
+                        )
                     await asyncio.sleep(3)
                 else:
-                    logger.error("Failed to connect to database after multiple attempts")
+                    logger.error(
+                        "Failed to connect to database after multiple attempts"
+                        )
                     raise
 
     async def disconnect(self):
