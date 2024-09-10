@@ -3,6 +3,7 @@ import asyncpg
 from src.settings import settings
 from abc import ABC, abstractmethod
 from typing import List
+import asyncio
 
 
 class IDatabase(ABC):
@@ -43,14 +44,26 @@ class Database(IDatabase):
             self.pool = None
 
     async def connect(self):
-        self.pool = await asyncpg.create_pool(
-            host=settings.DB_HOST,
-            port=settings.DB_PORT,
-            user=settings.DB_USER,
-            password=settings.DB_PASSWORD,
-            database=settings.DB_NAME,
-        )
-        logger.info("Database pool initialized connection")
+        retries = 3
+        for attempt in range(retries):
+            try:
+                self.pool = await asyncpg.create_pool(
+                    host=settings.DB_HOST,
+                    port=settings.DB_PORT,
+                    user=settings.DB_USER,
+                    password=settings.DB_PASSWORD,
+                    database=settings.DB_NAME,
+                )
+                logger.info("Database pool initialized connection")
+                break
+            except asyncpg.PostgresError as e:
+                logger.error(f"Error connecting to database: {e}")
+                if attempt < retries - 1:
+                    logger.info(f"Retrying connection attempt {attempt + 1}/{retries}")
+                    await asyncio.sleep(3)
+                else:
+                    logger.error("Failed to connect to database after multiple attempts")
+                    raise
 
     async def disconnect(self):
         if self.pool:
