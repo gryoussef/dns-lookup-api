@@ -62,7 +62,7 @@ jobs:
       run: |
         helm package ./chart
     - name: Upload Helm chart
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: helm-chart-${{ github.sha }}
         path: ./*.tgz
